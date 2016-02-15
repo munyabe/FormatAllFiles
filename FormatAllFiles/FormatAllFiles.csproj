@@ -52,6 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CommandBase.cs" />
     <Compile Include="FormatAllFilesCommand.cs" />
     <Compile Include="FormatAllFilesPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
