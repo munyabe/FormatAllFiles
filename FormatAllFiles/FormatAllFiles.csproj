@@ -167,6 +167,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\FormatAllFilesCommand.png" />
     <VSCTCompile Include="FormatAllFilesPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>

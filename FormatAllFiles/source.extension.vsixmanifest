@@ -4,6 +4,7 @@
     <Identity Id="FormatAllFiles.Haruaki Amabe.16a2b8be-df6a-49b4-87c3-d5aeb9478822" Version="1.0" Language="en-US" Publisher="Haruaki Amabe" />
     <DisplayName>FormatAllFiles</DisplayName>
     <Description>Empty VSIX Project.</Description>
+    <License>LICENSE.txt</License>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
