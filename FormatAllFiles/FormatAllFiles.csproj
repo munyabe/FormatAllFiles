@@ -55,6 +55,7 @@
     <Compile Include="CommandBase.cs" />
     <Compile Include="FormatAllFilesCommand.cs" />
     <Compile Include="FormatAllFilesPackage.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
