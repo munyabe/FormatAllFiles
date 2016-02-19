@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using EnvDTE;
+using FormatAllFiles.Options;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -18,11 +19,6 @@ namespace FormatAllFiles
         /// コマンドのIDです。
         /// </summary>
         public const int CommandId = 0x0100;
-
-        /// <summary>
-        /// ドキュメントをフォーマットするコマンドです。
-        /// </summary>
-        private const string FORMAT_DOCUMENT_COMMAND = "Edit.FormatDocument";
 
         /// <summary>
         /// コマンドメニューグループのIDです。
@@ -81,6 +77,8 @@ namespace FormatAllFiles
             OutputWindowPane.Clear();
             WriteOutputWindow(DateTime.Now.ToString("T") + " Started.");
 
+            var option = (GeneralOption)Package.GetDialogPage(typeof(GeneralOptionPage)).AutomationObject;
+
             GetProjectItems(dte.Solution)
                 .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string)
                 .ForEach(item =>
@@ -88,7 +86,7 @@ namespace FormatAllFiles
                     var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
                     WriteOutputWindow("Formatting: " + name);
 
-                    ExecuteCommand(item, FORMAT_DOCUMENT_COMMAND);
+                    ExecuteCommand(item, option.Command);
                 });
 
             WriteOutputWindow(DateTime.Now.ToString("T") + " Finished.");

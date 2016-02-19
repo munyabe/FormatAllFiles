@@ -56,6 +56,10 @@
     <Compile Include="FormatAllFilesCommand.cs" />
     <Compile Include="FormatAllFilesPackage.cs" />
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="Options\GeneralOption.cs" />
+    <Compile Include="Options\GeneralOptionPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

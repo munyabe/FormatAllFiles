@@ -12,17 +12,17 @@ namespace FormatAllFiles
     internal abstract class CommandBase
     {
         /// <summary>
-        /// コマンドを提供するパッケージです。
-        /// </summary>
-        private readonly Package _package;
-
-        /// <summary>
         /// サービスプロバイダーを取得します。
         /// </summary>
         protected IServiceProvider ServiceProvider
         {
-            get { return _package; }
+            get { return Package; }
         }
+
+        /// <summary>
+        /// コマンドを提供するパッケージを取得します。
+        /// </summary>
+        protected Package Package { get; private set; }
 
         /// <summary>
         /// インスタンスを初期化します。
@@ -40,7 +40,7 @@ namespace FormatAllFiles
                 throw new ArgumentNullException("package");
             }
 
-            _package = package;
+            Package = package;
 
             var commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
