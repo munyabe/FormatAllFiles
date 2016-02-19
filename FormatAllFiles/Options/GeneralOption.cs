@@ -21,6 +21,14 @@ namespace FormatAllFiles.Options
         public string Command { get; set; }
 
         /// <summary>
+        /// 対象ファイルを絞り込むために一致させる正規表現のパターンです。
+        /// </summary>
+        [Category("General")]
+        [DisplayName("Filter Pattern")]
+        [Description("Regular expression to filter target files. If this pattern is empty, all files apply.")]
+        public string FilterPattern { get; set; }
+
+        /// <summary>
         /// インスタンスを初期化します。
         /// </summary>
         public GeneralOption()
