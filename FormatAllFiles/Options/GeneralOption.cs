@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace FormatAllFiles.Options
 {
@@ -34,6 +36,24 @@ namespace FormatAllFiles.Options
         public GeneralOption()
         {
             Command = FORMAT_DOCUMENT_COMMAND;
+        }
+
+        /// <summary>
+        /// 対象ファイルを名前で絞り込むフィルターを作成します。
+        /// </summary>
+        /// <returns>ファイルを絞り込む処理</returns>
+        public Func<string, bool> CreateFileFilter()
+        {
+            Regex regex;
+            if (string.IsNullOrWhiteSpace(FilterPattern))
+            {
+                return name => true;
+            }
+            else
+            {
+                regex = new Regex(FilterPattern);
+                return regex.IsMatch;
+            }
         }
     }
 }

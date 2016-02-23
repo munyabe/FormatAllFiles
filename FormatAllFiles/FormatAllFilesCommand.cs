@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using EnvDTE;
 using FormatAllFiles.Options;
 using Microsoft.VisualStudio;
@@ -79,7 +78,7 @@ namespace FormatAllFiles
             WriteOutputWindow(DateTime.Now.ToString("T") + " Started.");
 
             var option = (GeneralOption)Package.GetDialogPage(typeof(GeneralOptionPage)).AutomationObject;
-            var filter = CreateFilter(option);
+            var filter = option.CreateFileFilter(); ;
 
             GetProjectItems(dte.Solution)
                 .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && filter(item.Name))
@@ -93,23 +92,6 @@ namespace FormatAllFiles
 
             WriteOutputWindow(DateTime.Now.ToString("T") + " Finished.");
             dte.StatusBar.Text = "Format All Files is finished.";
-        }
-
-        /// <summary>
-        /// 対象ファイルを名前で絞り込むフィルターを作成します。
-        /// </summary>
-        private static Func<string, bool> CreateFilter(GeneralOption option)
-        {
-            Regex regex;
-            if (string.IsNullOrWhiteSpace(option.FilterPattern))
-            {
-                return name => true;
-            }
-            else
-            {
-                regex = new Regex(option.FilterPattern);
-                return regex.IsMatch;
-            }
         }
 
         /// <summary>
