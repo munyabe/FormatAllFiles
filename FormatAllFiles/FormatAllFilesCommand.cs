@@ -78,10 +78,10 @@ namespace FormatAllFiles
             WriteOutputWindow(DateTime.Now.ToString("T") + " Started.");
 
             var option = (GeneralOption)Package.GetDialogPage(typeof(GeneralOptionPage)).AutomationObject;
-            var filter = option.CreateFileFilter(); ;
+            var fileFilter = option.CreateFileFilter();
 
-            GetProjectItems(dte.Solution)
-                .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && filter(item.Name))
+            GetProjectItems(dte.Solution, option.CreateHierarchyFilter())
+                .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && fileFilter(item.Name))
                 .ForEach(item =>
                 {
                     var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
@@ -133,14 +133,15 @@ namespace FormatAllFiles
         /// <summary>
         /// ソリューションに含まれるアイテムの一覧を取得します。
         /// </summary>
-        private IEnumerable<ProjectItem> GetProjectItems(Solution solution)
+        private IEnumerable<ProjectItem> GetProjectItems(Solution solution, Func<string, bool> filter)
         {
             return solution.Projects.OfType<Project>()
                 .SelectMany(x => x.ProjectItems.OfType<ProjectItem>())
                 .Recursive(x =>
                 {
                     var innerItems = x.ProjectItems;
-                    return innerItems != null && innerItems.Count != 0 ? innerItems.OfType<ProjectItem>() : Enumerable.Empty<ProjectItem>();
+                    return innerItems != null && innerItems.Count != 0 && filter(x.Name) ?
+                        innerItems.OfType<ProjectItem>() : Enumerable.Empty<ProjectItem>();
                 });
         }
 
