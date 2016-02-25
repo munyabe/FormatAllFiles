@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace FormatAllFiles.Options
 {
@@ -32,12 +31,12 @@ namespace FormatAllFiles.Options
         public bool ExcludeGeneratedT4 { get; set; }
 
         /// <summary>
-        /// 対象ファイルを絞り込むために一致させる正規表現のパターンです。
+        /// 対象とするファイルを一致させるワイルドカードのパターンです。
         /// </summary>
         [Category("Target File")]
-        [DisplayName("Filter Pattern")]
-        [Description("Regular expression to filter target files. If this pattern is empty, all files apply.")]
-        public string FilterPattern { get; set; }
+        [DisplayName("Inclusion Pattern")]
+        [Description("This is a pattern to search inclusion files. You can use the wild card \"*\" and \"?\" like \"*.cs\". When this is empty, all files apply.")]
+        public string InclusionFilePattern { get; set; }
 
         /// <summary>
         /// インスタンスを初期化します。
@@ -45,6 +44,7 @@ namespace FormatAllFiles.Options
         public GeneralOption()
         {
             Command = FORMAT_DOCUMENT_COMMAND;
+            InclusionFilePattern = "*.*";
             ExcludeGeneratedT4 = true;
         }
 
@@ -54,15 +54,14 @@ namespace FormatAllFiles.Options
         /// <returns>ファイル名で絞り込む処理</returns>
         public Func<string, bool> CreateFileFilter()
         {
-            Regex regex;
-            if (string.IsNullOrWhiteSpace(FilterPattern))
+            if (string.IsNullOrWhiteSpace(InclusionFilePattern))
             {
                 return name => true;
             }
             else
             {
-                regex = new Regex(FilterPattern);
-                return regex.IsMatch;
+                var wildCard = new WildCard(InclusionFilePattern);
+                return wildCard.IsMatch;
             }
         }
 
