@@ -50,6 +50,8 @@ namespace Test.FormatAllFiles
 
             Assert.IsFalse(isMatch("file.txt", "*.?"));
             Assert.IsFalse(isMatch("file.txt", "?.*"));
+
+            Assert.IsFalse(isMatch("file.txt", string.Empty));
         }
     }
 }
