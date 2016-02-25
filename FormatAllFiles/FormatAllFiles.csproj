@@ -61,7 +61,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WildCard.cs" />
+    <Compile Include="Text\WildCard.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />

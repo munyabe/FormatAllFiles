@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace FormatAllFiles
+namespace FormatAllFiles.Text
 {
     /// <summary>
     /// ワイルドカードを表します。

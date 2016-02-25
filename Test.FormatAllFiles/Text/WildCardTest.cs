@@ -1,8 +1,8 @@
 ﻿using System;
-using FormatAllFiles;
+using FormatAllFiles.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.FormatAllFiles
+namespace Test.FormatAllFiles.Text
 {
     /// <summary>
     /// <see cref="WildCard"/>のテストクラスです。
