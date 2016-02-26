@@ -36,7 +36,7 @@ namespace FormatAllFiles.Options
         /// </summary>
         [Category("Target File")]
         [DisplayName("Inclusion Pattern")]
-        [Description("This is a pattern to search inclusion files. You can use the wild card \"*\" and \"?\" like \"*.cs\". When this is empty, all files apply.")]
+        [Description("This is a pattern to search inclusion files. You can use wild cards like '*.cs\' (? matches any character, * matches any string.), and use multi paterns with the delimiter(;). When this is empty, all files apply.")]
         public string InclusionFilePattern { get; set; }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace FormatAllFiles.Options
             }
             else
             {
-                var wildCard = new WildCard(InclusionFilePattern);
+                var wildCard = new WildCard(InclusionFilePattern, WildCardOptions.MultiPattern);
                 return wildCard.IsMatch;
             }
         }

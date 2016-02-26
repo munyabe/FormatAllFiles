@@ -1,4 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace FormatAllFiles.Text
 {
@@ -8,17 +11,23 @@ namespace FormatAllFiles.Text
     public class WildCard
     {
         /// <summary>
+        /// パターンの区切り文字です。
+        /// </summary>
+        public const char Delimiter = ';';
+
+        /// <summary>
         /// 対象を検索する正規表現です。
         /// </summary>
-        private readonly Regex _regex;
+        private readonly Regex[] _regexes;
 
         /// <summary>
         /// インスタンスを初期化します。
         /// </summary>
         /// <param name="pattern">対象を検索するパターン</param>
-        public WildCard(string pattern)
+        /// <param name="options">ワイルドカードのオプション</param>
+        public WildCard(string pattern, WildCardOptions options = WildCardOptions.SinglePattern)
         {
-            _regex = new Regex(ConvertRegexPattern(pattern));
+            _regexes = ConvertRegexPatterns(pattern, options).Select(x => new Regex(x)).ToArray();
         }
 
         /// <summary>
@@ -28,7 +37,7 @@ namespace FormatAllFiles.Text
         /// <returns>一致する対象が見つかった場合は<see langword="true" /></returns>
         public bool IsMatch(string input)
         {
-            return _regex.IsMatch(input);
+            return _regexes.Any(x => x.IsMatch(input));
         }
 
         /// <summary>
@@ -36,15 +45,15 @@ namespace FormatAllFiles.Text
         /// </summary>
         /// <param name="input">一致する対象を検索する文字列</param>
         /// <param name="pattern">対象を検索するパターン</param>
+        /// <param name="options">ワイルドカードのオプション</param>
         /// <returns>一致する対象が見つかった場合は<see langword="true" /></returns>
-        public static bool IsMatch(string input, string pattern)
+        public static bool IsMatch(string input, string pattern, WildCardOptions options = WildCardOptions.SinglePattern)
         {
-            var regexPattern = ConvertRegexPattern(pattern);
-            return Regex.IsMatch(input, regexPattern);
+            return ConvertRegexPatterns(pattern, options).Any(x => Regex.IsMatch(input, x));
         }
 
         /// <summary>
-        /// ワイルドカードのパターンを正規表現のパターンに変換します。
+        /// ワイルドカードのパターンに対応する単一の正規表現のパターンに変換します。
         /// </summary>
         private static string ConvertRegexPattern(string wildCardPattern)
         {
@@ -53,6 +62,26 @@ namespace FormatAllFiles.Text
                 .Replace(@"\?", ".");
 
             return $"^{regexPattern}$";
+        }
+
+        /// <summary>
+        /// ワイルドカードのパターンに対応する正規表現のパターンに変換します。
+        /// </summary>
+        private static IEnumerable<string> ConvertRegexPatterns(string wildCardPattern, WildCardOptions options)
+        {
+            if (string.IsNullOrEmpty(wildCardPattern))
+            {
+                return Enumerable.Empty<string>();
+            }
+            else if (options.HasFlag(WildCardOptions.MultiPattern))
+            {
+                return wildCardPattern.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(ConvertRegexPattern);
+            }
+            else
+            {
+                return new[] { ConvertRegexPattern(wildCardPattern) };
+            }
         }
     }
 }
