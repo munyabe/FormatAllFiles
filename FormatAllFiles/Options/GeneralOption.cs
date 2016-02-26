@@ -32,7 +32,15 @@ namespace FormatAllFiles.Options
         public bool ExcludeGeneratedT4 { get; set; }
 
         /// <summary>
-        /// 対象とするファイルを一致させるワイルドカードのパターンです。
+        /// 対象とするファイルを除外するワイルドカードのパターンです。
+        /// </summary>
+        [Category("Target File")]
+        [DisplayName("Exclusion Pattern")]
+        [Description("This is a pattern to search exclusion files. You can also use wild cards. This is given priority over Inclusion Pattern.")]
+        public string ExclusionFilePattern { get; set; }
+
+        /// <summary>
+        /// 対象とするファイルを検索するワイルドカードのパターンです。
         /// </summary>
         [Category("Target File")]
         [DisplayName("Inclusion Pattern")]
@@ -55,15 +63,30 @@ namespace FormatAllFiles.Options
         /// <returns>ファイル名で絞り込む処理</returns>
         public Func<string, bool> CreateFileFilter()
         {
+            Func<string, bool> inclusionFilter;
             if (string.IsNullOrWhiteSpace(InclusionFilePattern))
             {
-                return name => true;
+                inclusionFilter = name => true;
             }
             else
             {
                 var wildCard = new WildCard(InclusionFilePattern, WildCardOptions.MultiPattern);
-                return wildCard.IsMatch;
+                inclusionFilter = wildCard.IsMatch;
+
             }
+
+            Func<string, bool> exclusionFilter;
+            if (string.IsNullOrWhiteSpace(ExclusionFilePattern))
+            {
+                exclusionFilter = name => false;
+            }
+            else
+            {
+                var wildCard = new WildCard(ExclusionFilePattern, WildCardOptions.MultiPattern);
+                exclusionFilter = wildCard.IsMatch;
+            }
+
+            return name => exclusionFilter(name) == false && inclusionFilter(name);
         }
 
         /// <summary>

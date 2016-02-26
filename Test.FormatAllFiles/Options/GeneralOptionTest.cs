@@ -13,18 +13,39 @@ namespace Test.FormatAllFiles.Options
         [TestMethod]
         public void CreateFileFilterTest()
         {
-            var filter = CreateFileFilter(string.Empty);
+            var filter = CreateFileFilter(string.Empty, string.Empty);
             Assert.IsTrue(filter("file.txt"));
             Assert.IsTrue(filter(string.Empty));
 
-            filter = CreateFileFilter("*.txt");
+            filter = CreateFileFilter("*.txt", string.Empty);
             Assert.IsTrue(filter("file.txt"));
             Assert.IsFalse(filter("file.cs"));
             Assert.IsFalse(filter(string.Empty));
 
-            filter = CreateFileFilter("*.txt;*.cs");
+            filter = CreateFileFilter("*.txt;*.cs", string.Empty);
             Assert.IsTrue(filter("file.txt"));
             Assert.IsTrue(filter("file.cs"));
+            Assert.IsFalse(filter(string.Empty));
+
+            filter = CreateFileFilter(string.Empty, "*.txt");
+            Assert.IsFalse(filter("file.txt"));
+            Assert.IsTrue(filter("file.cs"));
+            Assert.IsTrue(filter(string.Empty));
+
+            filter = CreateFileFilter(string.Empty, "*.txt;*.cs");
+            Assert.IsFalse(filter("file.txt"));
+            Assert.IsFalse(filter("file.cs"));
+            Assert.IsTrue(filter(string.Empty));
+
+            filter = CreateFileFilter("*.txt", "*.tt.txt");
+            Assert.IsTrue(filter("file.txt"));
+            Assert.IsFalse(filter("file.tt.txt"));
+            Assert.IsFalse(filter("file.cs"));
+            Assert.IsFalse(filter(string.Empty));
+
+            filter = CreateFileFilter("*.txt", "*.txt");
+            Assert.IsFalse(filter("file.txt"));
+            Assert.IsFalse(filter("file.cs"));
             Assert.IsFalse(filter(string.Empty));
         }
 
@@ -46,11 +67,12 @@ namespace Test.FormatAllFiles.Options
         /// <summary>
         /// テストで使用する FileFilter を作成します。
         /// </summary>
-        private Func<string, bool> CreateFileFilter(string inclusionPattern)
+        private Func<string, bool> CreateFileFilter(string inclusionPattern, string exclusionPattern)
         {
             var option = new GeneralOption
             {
-                InclusionFilePattern = inclusionPattern
+                InclusionFilePattern = inclusionPattern,
+                ExclusionFilePattern = exclusionPattern
             };
 
             return option.CreateFileFilter();
