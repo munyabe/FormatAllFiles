@@ -13,6 +13,7 @@ namespace FormatAllFiles
     [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(GeneralOptionPage), PackageName, "General", 100, 101, true, new string[] { PackageName, "Option" })]
+    [ProvideProfile(typeof(GeneralOptionPage), PackageName, "General", 110, 110, true)]
     public sealed class FormatAllFilesPackage : Package
     {
         /// <summary>
