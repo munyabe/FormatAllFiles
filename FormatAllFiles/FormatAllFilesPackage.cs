@@ -12,9 +12,14 @@ namespace FormatAllFiles
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideOptionPage(typeof(GeneralOptionPage), "Format All Files", "General", 100, 101, true, new string[] { "Format All Files", "Option" })]
+    [ProvideOptionPage(typeof(GeneralOptionPage), PackageName, "General", 100, 101, true, new string[] { PackageName, "Option" })]
     public sealed class FormatAllFilesPackage : Package
     {
+        /// <summary>
+        /// パッケージの名前です。
+        /// </summary>
+        public const string PackageName = "Format All Files";
+
         /// <summary>
         /// パッケージのIDです。
         /// </summary>

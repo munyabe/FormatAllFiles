@@ -27,7 +27,7 @@ namespace FormatAllFiles
         /// <summary>
         /// 出力ウィンドウの表示領域です。
         /// </summary>
-        private OutputWindow _outputWindow = new OutputWindow("Format All Files");
+        private OutputWindow _outputWindow = new OutputWindow(FormatAllFilesPackage.PackageName);
 
         /// <summary>
         /// シングルトンのインスタンスを取得します。
