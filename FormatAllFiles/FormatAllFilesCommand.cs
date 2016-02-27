@@ -6,7 +6,6 @@ using EnvDTE;
 using FormatAllFiles.Options;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace FormatAllFiles
 {
@@ -26,30 +25,14 @@ namespace FormatAllFiles
         public static readonly Guid CommandSet = new Guid("b9f80962-1b6d-4cfb-bcd8-bd51f716e103");
 
         /// <summary>
+        /// 出力ウィンドウの表示領域です。
+        /// </summary>
+        private OutputWindow _outputWindow = new OutputWindow("Format All Files");
+
+        /// <summary>
         /// シングルトンのインスタンスを取得します。
         /// </summary>
         public static FormatAllFilesCommand Instance { get; private set; }
-
-        private IVsOutputWindowPane _outputWindowPane;
-        /// <summary>
-        /// 出力ウィンドウのペインを取得します。
-        /// </summary>
-        private IVsOutputWindowPane OutputWindowPane
-        {
-            get
-            {
-                if (_outputWindowPane == null)
-                {
-                    var outputWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-
-                    var guidGeneral = VSConstants.OutputWindowPaneGuid.GeneralPane_guid;
-                    outputWindow.CreatePane(guidGeneral, "FormatAllFiles", 1, 1);
-                    outputWindow.GetPane(guidGeneral, out _outputWindowPane);
-                }
-
-                return _outputWindowPane;
-            }
-        }
 
         /// <summary>
         /// インスタンスを初期化します。
@@ -74,8 +57,8 @@ namespace FormatAllFiles
             var dte = ServiceProvider.GetService(typeof(DTE)) as DTE;
 
             dte.StatusBar.Text = "Format All Files is started.";
-            OutputWindowPane.Clear();
-            WriteOutputWindow(DateTime.Now.ToString("T") + " Started.");
+            _outputWindow.Clear();
+            _outputWindow.WriteLine(DateTime.Now.ToString("T") + " Started.");
 
             var option = (GeneralOption)Package.GetDialogPage(typeof(GeneralOptionPage)).AutomationObject;
             var fileFilter = option.CreateFileFilter();
@@ -85,12 +68,12 @@ namespace FormatAllFiles
                 .ForEach(item =>
                 {
                     var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
-                    WriteOutputWindow("Formatting: " + name);
+                    _outputWindow.WriteLine("Formatting: " + name);
 
                     ExecuteCommand(item, option.Command);
                 });
 
-            WriteOutputWindow(DateTime.Now.ToString("T") + " Finished.");
+            _outputWindow.WriteLine(DateTime.Now.ToString("T") + " Finished.");
             dte.StatusBar.Text = "Format All Files is finished.";
         }
 
@@ -114,7 +97,7 @@ namespace FormatAllFiles
                 }
                 catch (COMException ex)
                 {
-                    WriteOutputWindow(ex.Message);
+                    _outputWindow.WriteLine(ex.Message);
                 }
                 finally
                 {
@@ -143,16 +126,6 @@ namespace FormatAllFiles
                     return innerItems != null && innerItems.Count != 0 && filter(x.Name) ?
                         innerItems.OfType<ProjectItem>() : Enumerable.Empty<ProjectItem>();
                 });
-        }
-
-        /// <summary>
-        /// 出力ウィンドウにメッセージを出力します。
-        /// </summary>
-        private void WriteOutputWindow(string message)
-        {
-            var pane = OutputWindowPane;
-            pane.OutputString(message);
-            pane.OutputString(Environment.NewLine);
         }
     }
 }
