@@ -132,7 +132,7 @@
     <value>Format All Files</value>
   </data>
   <data name="112" xml:space="preserve">
-    <value>FormatAllFilesPackage Visual Studio Extension Detailed Info</value>
+    <value>This is a visual studio extension to format all files and execute other command in a solution or project.</value>
   </data>
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\FormatAllFilesPackage.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
