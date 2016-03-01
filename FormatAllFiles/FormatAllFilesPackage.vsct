@@ -37,7 +37,7 @@
          must be a menu. -->
     <Groups>
       <Group guid="guidFormatAllFilesPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
       </Group>
     </Groups>
 
@@ -56,7 +56,7 @@
         <Parent guid="guidFormatAllFilesPackageCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>Invoke FormatAllFilesCommand</ButtonText>
+          <ButtonText>Format All Files</ButtonText>
         </Strings>
       </Button>
     </Buttons>
