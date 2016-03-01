@@ -77,7 +77,7 @@ namespace FormatAllFiles
                 ExecuteCommand(item, option.Command);
             }
 
-            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({targetItems.Length} files.)");
+            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({targetItems.Length} files)");
             dte.StatusBar.Text = "Format All Files is finished.";
         }
 
