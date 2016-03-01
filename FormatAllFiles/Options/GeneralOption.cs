@@ -33,8 +33,8 @@ namespace FormatAllFiles.Options
         /// 各ファイルの using を整理、削除および並び替えるかどうかを取得または設定します。
         /// </summary>
         [Category("Command")]
-        [DisplayName("Enable Remove and Sort Using")]
-        [Description("When true, each files will be removed and sorted using. This command is 'Edit.RemoveAndSort'.")]
+        [DisplayName("Enable Remove and Sort Usings")]
+        [Description("When true, each files will be removed and sorted usings. This command is 'Edit.RemoveAndSort'.")]
         public bool EnableRemoveAndSortUsing { get; set; }
 
         /// <summary>
