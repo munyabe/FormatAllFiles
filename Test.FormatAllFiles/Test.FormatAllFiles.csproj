@@ -61,6 +61,7 @@
     <Compile Include="Options\GeneralOptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\WildCardTest.cs" />
+    <Compile Include="EnumerableExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FormatAllFiles\FormatAllFiles.csproj">
