@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using FormatAllFiles.Text;
@@ -16,12 +17,25 @@ namespace FormatAllFiles.Options
         private const string FORMAT_DOCUMENT_COMMAND = "Edit.FormatDocument";
 
         /// <summary>
-        /// 各ファイルに実行するコマンドを取得または設定します。
+        /// using を整理、削除および並び替えるコマンドです。
+        /// </summary>
+        private const string REMOVE_AND_SORT_COMMAND = "Edit.RemoveAndSort";
+
+        /// <summary>
+        /// 各ファイルをフォーマットするかどうかを取得または設定します。
         /// </summary>
         [Category("Command")]
-        [DisplayName("Execution Command")]
-        [Description("A command to execute each files.")]
-        public string Command { get; set; }
+        [DisplayName("Enable Format Document")]
+        [Description("When true, each files will be formatted. This command is 'Edit.FormatDocument'.")]
+        public bool EnableFormatDocument { get; set; }
+
+        /// <summary>
+        /// 各ファイルの using を整理、削除および並び替えるかどうかを取得または設定します。
+        /// </summary>
+        [Category("Command")]
+        [DisplayName("Enable Remove and Sort Using")]
+        [Description("When true, each files will be removed and sorted using. This command is 'Edit.RemoveAndSort'.")]
+        public bool EnableRemoveAndSortUsing { get; set; }
 
         /// <summary>
         /// T4で作成されたファイルを対象から除外するかどうかを取得または設定します。
@@ -48,11 +62,20 @@ namespace FormatAllFiles.Options
         public string InclusionFilePattern { get; set; }
 
         /// <summary>
+        /// 各ファイルに実行するコマンドを取得または設定します。
+        /// </summary>
+        [Category("Command")]
+        [DisplayName("Other Execution Command")]
+        [Description("A command to execute each files.")]
+        public string OtherCommand { get; set; }
+
+        /// <summary>
         /// インスタンスを初期化します。
         /// </summary>
         public GeneralOption()
         {
-            Command = FORMAT_DOCUMENT_COMMAND;
+            EnableFormatDocument = true;
+
             InclusionFilePattern = "*.*";
             ExcludeGeneratedT4 = true;
         }
@@ -102,6 +125,27 @@ namespace FormatAllFiles.Options
             else
             {
                 return path => true;
+            }
+        }
+
+        /// <summary>
+        /// 各ファイルに対して実行するコマンドの一覧を取得します。
+        /// </summary>
+        public IEnumerable<string> GetCommands()
+        {
+            if (EnableFormatDocument)
+            {
+                yield return FORMAT_DOCUMENT_COMMAND;
+            }
+
+            if (EnableRemoveAndSortUsing)
+            {
+                yield return REMOVE_AND_SORT_COMMAND;
+            }
+
+            if (string.IsNullOrWhiteSpace(OtherCommand) == false)
+            {
+                yield return OtherCommand;
             }
         }
     }

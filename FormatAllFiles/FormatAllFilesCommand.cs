@@ -74,7 +74,7 @@ namespace FormatAllFiles
                 var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
                 _outputWindow.WriteLine("Formatting: " + name);
 
-                ExecuteCommand(item, option.Command);
+                ExecuteCommand(item, option.GetCommands());
             }
 
             _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({targetItems.Length} files)");
@@ -84,7 +84,7 @@ namespace FormatAllFiles
         /// <summary>
         /// プロジェクトのアイテムを開いて指定のコマンドを実行します。
         /// </summary>
-        private void ExecuteCommand(ProjectItem item, string command)
+        private void ExecuteCommand(ProjectItem item, IEnumerable<string> commands)
         {
             var isOpen = item.get_IsOpen();
             if (isOpen == false)
@@ -97,11 +97,17 @@ namespace FormatAllFiles
                 try
                 {
                     document.Activate();
-                    item.DTE.ExecuteCommand(command);
-                }
-                catch (COMException ex)
-                {
-                    _outputWindow.WriteLine(ex.Message);
+                    foreach (var command in commands)
+                    {
+                        try
+                        {
+                            item.DTE.ExecuteCommand(command);
+                        }
+                        catch (COMException ex)
+                        {
+                            _outputWindow.WriteLine(ex.Message);
+                        }
+                    }
                 }
                 finally
                 {
