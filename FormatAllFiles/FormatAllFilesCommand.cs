@@ -63,17 +63,19 @@ namespace FormatAllFiles
             var option = (GeneralOption)Package.GetDialogPage(typeof(GeneralOptionPage)).AutomationObject;
             var fileFilter = option.CreateFileFilter();
 
-            GetProjectItems(dte.Solution, option.CreateHierarchyFilter())
+            var targetItems = GetProjectItems(dte.Solution, option.CreateHierarchyFilter())
                 .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && fileFilter(item.Name))
-                .ForEach(item =>
-                {
-                    var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
-                    _outputWindow.WriteLine("Formatting: " + name);
+                .ToArray();
 
-                    ExecuteCommand(item, option.Command);
-                });
+            foreach (var item in targetItems)
+            {
+                var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
+                _outputWindow.WriteLine("Formatting: " + name);
 
-            _outputWindow.WriteLine(DateTime.Now.ToString("T") + " Finished.");
+                ExecuteCommand(item, option.Command);
+            }
+
+            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({targetItems.Length} files.)");
             dte.StatusBar.Text = "Format All Files is finished.";
         }
 
