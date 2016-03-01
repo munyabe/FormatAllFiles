@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using EnvDTE;
+using EnvDTE80;
 using FormatAllFiles.Options;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -54,7 +55,7 @@ namespace FormatAllFiles
         /// <inheritdoc />
         protected override void Execute(object sender, EventArgs e)
         {
-            var dte = ServiceProvider.GetService(typeof(DTE)) as DTE;
+            var dte = (DTE2)ServiceProvider.GetService(typeof(DTE));
 
             dte.StatusBar.Text = "Format All Files is started.";
             _outputWindow.Clear();
@@ -63,7 +64,8 @@ namespace FormatAllFiles
             var option = (GeneralOption)Package.GetDialogPage(typeof(GeneralOptionPage)).AutomationObject;
             var fileFilter = option.CreateFileFilter();
 
-            var targetItems = GetProjectItems(dte.Solution, option.CreateHierarchyFilter())
+            var targetItems = GetSelectedProjects(dte.ToolWindows.SolutionExplorer)
+                .SelectMany(x => GetProjectItems(x, option.CreateHierarchyFilter()))
                 .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && fileFilter(item.Name))
                 .ToArray();
 
@@ -116,18 +118,47 @@ namespace FormatAllFiles
         }
 
         /// <summary>
-        /// ソリューションに含まれるアイテムの一覧を取得します。
+        /// プロジェクトに含まれるアイテムの一覧を取得します。
         /// </summary>
-        private IEnumerable<ProjectItem> GetProjectItems(Solution solution, Func<string, bool> filter)
+        private IEnumerable<ProjectItem> GetProjectItems(Project project, Func<string, bool> filter)
         {
-            return solution.Projects.OfType<Project>()
-                .SelectMany(x => x.ProjectItems.OfType<ProjectItem>())
+            return project.ProjectItems
+                .OfType<ProjectItem>()
                 .Recursive(x =>
                 {
                     var innerItems = x.ProjectItems;
                     return innerItems != null && innerItems.Count != 0 && filter(x.Name) ?
                         innerItems.OfType<ProjectItem>() : Enumerable.Empty<ProjectItem>();
                 });
+        }
+
+        /// <summary>
+        /// ソリューションエクスプローラーで選択中のプロジェクトを取得します。
+        /// </summary>
+        /// <remarks>
+        /// ソリューションを選択中の場合は、その配下のプロジェクトを全て取得します。
+        /// </remarks>
+        private IEnumerable<Project> GetSelectedProjects(UIHierarchy solutionExplorer)
+        {
+            var selectedItems = (UIHierarchyItem[])solutionExplorer.SelectedItems;
+            if (selectedItems != null && selectedItems.Length == 1)
+            {
+                var selectedObject = selectedItems[0].Object;
+
+                var solution = selectedObject as Solution;
+                if (solution != null)
+                {
+                    return solution.Projects.OfType<Project>();
+                }
+
+                var project = selectedObject as Project;
+                if (project != null)
+                {
+                    return new[] { project };
+                }
+            }
+
+            return Enumerable.Empty<Project>();
         }
     }
 }
