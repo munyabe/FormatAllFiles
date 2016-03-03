@@ -69,12 +69,13 @@ namespace FormatAllFiles
                 .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && fileFilter(item.Name))
                 .ToArray();
 
+            var commands = option.GetCommands();
             foreach (var item in targetItems)
             {
                 var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
                 _outputWindow.WriteLine("Formatting: " + name);
 
-                ExecuteCommand(item, option.GetCommands());
+                ExecuteCommand(item, commands);
             }
 
             _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({targetItems.Length} files)");

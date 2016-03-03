@@ -131,22 +131,26 @@ namespace FormatAllFiles.Options
         /// <summary>
         /// 各ファイルに対して実行するコマンドの一覧を取得します。
         /// </summary>
-        public IEnumerable<string> GetCommands()
+        public IList<string> GetCommands()
         {
+            var result = new List<string>();
+
             if (EnableFormatDocument)
             {
-                yield return FORMAT_DOCUMENT_COMMAND;
+                result.Add(FORMAT_DOCUMENT_COMMAND);
             }
 
             if (EnableRemoveAndSortUsing)
             {
-                yield return REMOVE_AND_SORT_COMMAND;
+                result.Add(REMOVE_AND_SORT_COMMAND);
             }
 
             if (string.IsNullOrWhiteSpace(OtherCommand) == false)
             {
-                yield return OtherCommand;
+                result.Add(OtherCommand);
             }
+
+            return result;
         }
     }
 }
