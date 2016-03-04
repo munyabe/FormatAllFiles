@@ -5,6 +5,7 @@
     <DisplayName>Format All Files</DisplayName>
     <Description xml:space="preserve">This is a visual studio extension to format all files and execute other command in a solution or project. </Description>
     <License>LICENSE.txt</License>
+    <Icon>Resources\Package.ico</Icon>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
