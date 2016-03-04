@@ -147,10 +147,11 @@ namespace FormatAllFiles
         /// </remarks>
         private IEnumerable<Project> GetSelectedProjects(UIHierarchy solutionExplorer)
         {
-            var selectedItems = (UIHierarchyItem[])solutionExplorer.SelectedItems;
+            // MEMO : VS2015 では UIHierarchyItem[] だが、VS2010 では object[] になる
+            var selectedItems = (object[])solutionExplorer.SelectedItems;
             if (selectedItems != null && selectedItems.Length == 1)
             {
-                var selectedObject = selectedItems[0].Object;
+                var selectedObject = ((UIHierarchyItem)selectedItems[0]).Object;
 
                 var solution = selectedObject as Solution;
                 if (solution != null)
