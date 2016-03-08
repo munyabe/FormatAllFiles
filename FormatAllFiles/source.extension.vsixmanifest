@@ -8,6 +8,7 @@
     <Locale>1033</Locale>
     <License>LICENSE.txt</License>
     <Icon>Resources\Package.ico</Icon>
+    <PreviewImage>Resources\Preview.png</PreviewImage>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="10.0">
