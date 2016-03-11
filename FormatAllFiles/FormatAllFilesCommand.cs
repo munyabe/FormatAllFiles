@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using EnvDTE80;
-using FormatAllFiles.Options;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 
@@ -61,7 +60,7 @@ namespace FormatAllFiles
             _outputWindow.Clear();
             _outputWindow.WriteLine(DateTime.Now.ToString("T") + " Started.");
 
-            var option = (GeneralOption)Package.GetDialogPage(typeof(GeneralOptionPage)).AutomationObject;
+            var option = ((FormatAllFilesPackage)Package).GetGeneralOption();
             var fileFilter = option.CreateFileFilter();
 
             var targetItems = GetSelectedProjects(dte.ToolWindows.SolutionExplorer)
