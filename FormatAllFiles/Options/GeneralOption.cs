@@ -50,7 +50,7 @@ namespace FormatAllFiles.Options
         /// </summary>
         [Category("Target File")]
         [DisplayName("Exclusion Pattern")]
-        [Description("This is a pattern to search exclusion files. You can also use wild cards. This is given priority over Inclusion Pattern.")]
+        [Description("This is a pattern to search exclusion files. You can also use wildcards. This is given priority over Inclusion Pattern.")]
         public string ExclusionFilePattern { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace FormatAllFiles.Options
         /// </summary>
         [Category("Target File")]
         [DisplayName("Inclusion Pattern")]
-        [Description("This is a pattern to search inclusion files. You can use wild cards like '*.cs\' (? matches any character, * matches any string.), and use multi paterns with the delimiter(;). When this is empty, all files apply.")]
+        [Description("This is a pattern to search inclusion files. You can use wildcards like '*.cs\' ('?' matches any character, '*' matches any number of characters.), and use multi paterns with the delimiter(;). When this is empty, all files apply.")]
         public string InclusionFilePattern { get; set; }
 
         /// <summary>
