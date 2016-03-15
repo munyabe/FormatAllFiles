@@ -56,7 +56,6 @@ namespace FormatAllFiles
         {
             var dte = (DTE2)ServiceProvider.GetService(typeof(DTE));
 
-            dte.StatusBar.Text = "Format All Files is started.";
             _outputWindow.Clear();
             _outputWindow.WriteLine(DateTime.Now.ToString("T") + " Started.");
 
@@ -68,17 +67,22 @@ namespace FormatAllFiles
                 .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && fileFilter(item.Name))
                 .ToArray();
 
+            var itemCount = targetItems.Length;
             var commands = option.GetCommands();
-            foreach (var item in targetItems)
+            var statusBar = dte.StatusBar;
+
+            for (var i = 0; i < itemCount; i++)
             {
+                var item = targetItems[i];
                 var name = item.FileCount != 0 ? item.FileNames[0] : item.Name;
                 _outputWindow.WriteLine("Formatting: " + name);
+                statusBar.Progress(true, string.Empty, i + 1, itemCount);
 
                 ExecuteCommand(item, commands);
             }
 
-            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({targetItems.Length} files)");
-            dte.StatusBar.Text = "Format All Files is finished.";
+            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({itemCount} files)");
+            statusBar.Text = "Format All Files is finished.";
         }
 
         /// <summary>
