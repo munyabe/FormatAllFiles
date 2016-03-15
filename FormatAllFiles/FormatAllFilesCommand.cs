@@ -94,7 +94,14 @@ namespace FormatAllFiles
             var isOpen = item.get_IsOpen();
             if (isOpen == false)
             {
-                item.Open(VSConstants.LOGVIEWID.TextView_string);
+                try
+                {
+                    item.Open(VSConstants.LOGVIEWID.TextView_string);
+                }
+                catch (COMException)
+                {
+                    _outputWindow.WriteLine("This is not text file.");
+                }
             }
             var document = item.Document;
             if (document != null)
