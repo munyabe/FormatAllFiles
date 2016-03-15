@@ -11,6 +11,16 @@ namespace FormatAllFiles.Text
     public class WildCard
     {
         /// <summary>
+        /// 任意の一文字にマッチするパターンです。
+        /// </summary>
+        public const char AnyCharacterPattern = '?';
+
+        /// <summary>
+        /// 長さ0文字以上の任意の文字列にマッチするパターンです。
+        /// </summary>
+        public const char AnyCharactersPattern = '*';
+
+        /// <summary>
         /// パターンの区切り文字です。
         /// </summary>
         public const char Delimiter = ';';
@@ -58,8 +68,8 @@ namespace FormatAllFiles.Text
         private static string ConvertRegexPattern(string wildCardPattern)
         {
             var regexPattern = Regex.Escape(wildCardPattern)
-                .Replace(@"\*", ".*")
-                .Replace(@"\?", ".");
+                .Replace(@"\" + AnyCharacterPattern, ".")
+                .Replace(@"\" + AnyCharactersPattern, ".*");
 
             return $"^{regexPattern}$";
         }
