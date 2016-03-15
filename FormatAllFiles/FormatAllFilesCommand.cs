@@ -130,6 +130,9 @@ namespace FormatAllFiles
         /// <summary>
         /// プロジェクトに含まれるアイテムの一覧を取得します。
         /// </summary>
+        /// <remarks>
+        /// フォルダもプロジェクトとみなされます。
+        /// </remarks>
         private IEnumerable<ProjectItem> GetProjectItems(Project project, Func<string, bool> filter)
         {
             return project.ProjectItems
@@ -137,8 +140,24 @@ namespace FormatAllFiles
                 .Recursive(x =>
                 {
                     var innerItems = x.ProjectItems;
-                    return innerItems != null && innerItems.Count != 0 && filter(x.Name) ?
-                        innerItems.OfType<ProjectItem>() : Enumerable.Empty<ProjectItem>();
+                    if (innerItems != null)
+                    {
+                        if (filter(x.Name))
+                        {
+                            return innerItems.OfType<ProjectItem>();
+                        }
+                    }
+                    else
+                    {
+                        var subProject = x.SubProject;
+                        if (subProject != null)
+                        {
+                            // MEMO : フォルダの場合
+                            return GetProjectItems(subProject, filter);
+                        }
+                    }
+
+                    return Enumerable.Empty<ProjectItem>();
                 });
         }
 
@@ -146,7 +165,8 @@ namespace FormatAllFiles
         /// ソリューションエクスプローラーで選択中のプロジェクトを取得します。
         /// </summary>
         /// <remarks>
-        /// ソリューションを選択中の場合は、その配下のプロジェクトを全て取得します。
+        /// ソリューションを選択中の場合は、その直下のプロジェクトを取得します。
+        /// また、フォルダもプロジェクトとみなされます。
         /// </remarks>
         private IEnumerable<Project> GetSelectedProjects(UIHierarchy solutionExplorer)
         {
