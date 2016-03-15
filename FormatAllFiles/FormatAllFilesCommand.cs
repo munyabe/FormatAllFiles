@@ -56,9 +56,6 @@ namespace FormatAllFiles
         {
             var dte = (DTE2)ServiceProvider.GetService(typeof(DTE));
 
-            _outputWindow.Clear();
-            _outputWindow.WriteLine(DateTime.Now.ToString("T") + " Started.");
-
             var option = ((FormatAllFilesPackage)Package).GetGeneralOption();
             var fileFilter = option.CreateFileFilter();
 
@@ -70,6 +67,9 @@ namespace FormatAllFiles
             var itemCount = targetItems.Length;
             var commands = option.GetCommands();
             var statusBar = dte.StatusBar;
+
+            _outputWindow.Clear();
+            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Started. ({itemCount} files)");
 
             for (var i = 0; i < itemCount; i++)
             {
