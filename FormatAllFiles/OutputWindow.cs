@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -27,7 +26,7 @@ namespace FormatAllFiles
                 {
                     var outputWindow = (IVsOutputWindow)Package.GetGlobalService(typeof(SVsOutputWindow));
 
-                    var guidGeneral = VSConstants.OutputWindowPaneGuid.GeneralPane_guid;
+                    var guidGeneral = Guid.NewGuid();
                     outputWindow.CreatePane(guidGeneral, SourceName, 1, 1);
                     outputWindow.GetPane(guidGeneral, out _pane);
                 }
