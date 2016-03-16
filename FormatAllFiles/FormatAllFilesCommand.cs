@@ -65,6 +65,7 @@ namespace FormatAllFiles
                 .ToArray();
 
             var itemCount = targetItems.Length;
+            var errorCount = 0;
             var commands = option.GetCommands();
             var statusBar = dte.StatusBar;
 
@@ -78,10 +79,13 @@ namespace FormatAllFiles
                 _outputWindow.WriteLine("Formatting: " + name);
                 statusBar.Progress(true, string.Empty, i + 1, itemCount);
 
-                ExecuteCommand(item, commands);
+                if (ExecuteCommand(item, commands) == false)
+                {
+                    errorCount++;
+                }
             }
 
-            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({itemCount} files)");
+            _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({itemCount - errorCount} success. {errorCount} failure.)");
             statusBar.Progress(false);
             statusBar.Text = "Format All Files is finished.";
         }
@@ -89,8 +93,10 @@ namespace FormatAllFiles
         /// <summary>
         /// プロジェクトのアイテムを開いて指定のコマンドを実行します。
         /// </summary>
-        private void ExecuteCommand(ProjectItem item, IEnumerable<string> commands)
+        private bool ExecuteCommand(ProjectItem item, IEnumerable<string> commands)
         {
+            var result = false;
+
             var isOpen = item.get_IsOpen();
             if (isOpen == false)
             {
@@ -103,6 +109,7 @@ namespace FormatAllFiles
                     _outputWindow.WriteLine("This is not text file.");
                 }
             }
+
             var document = item.Document;
             if (document != null)
             {
@@ -114,6 +121,7 @@ namespace FormatAllFiles
                         try
                         {
                             item.DTE.ExecuteCommand(command);
+                            result = true;
                         }
                         catch (COMException ex)
                         {
@@ -133,6 +141,8 @@ namespace FormatAllFiles
                     }
                 }
             }
+
+            return result;
         }
 
         /// <summary>
