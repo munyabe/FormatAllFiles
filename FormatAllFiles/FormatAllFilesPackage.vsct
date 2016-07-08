@@ -36,10 +36,10 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidFormatAllFilesPackageCmdSet" id="SolutionMenuGroup" priority="0x0600">
+      <Group guid="guidFormatAllFilesPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
       </Group>
-      <Group guid="guidFormatAllFilesPackageCmdSet" id="ProjectMenuGroup" priority="0x0600">
+      <Group guid="guidFormatAllFilesPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
       </Group>
     </Groups>
@@ -56,15 +56,7 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidFormatAllFilesPackageCmdSet" id="FormatAllFilesCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidFormatAllFilesPackageCmdSet" id="SolutionMenuGroup" />
-        <Icon guid="guidImages" id="editDocument" />
-        <Strings>
-          <ButtonText>Format All Files</ButtonText>
-        </Strings>
-      </Button>
-    
-      <Button guid="guidFormatAllFilesPackageCmdSet" id="FormatAllFilesCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidFormatAllFilesPackageCmdSet" id="ProjectMenuGroup" />
+        <Parent guid="guidFormatAllFilesPackageCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="editDocument" />
         <Strings>
           <ButtonText>Format All Files</ButtonText>
@@ -89,8 +81,7 @@
 
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidFormatAllFilesPackageCmdSet" value="{b9f80962-1b6d-4cfb-bcd8-bd51f716e103}">
-      <IDSymbol name="SolutionMenuGroup" value="0x1020" />
-      <IDSymbol name="ProjectMenuGroup" value="0x1021" />
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="FormatAllFilesCommandId" value="0x0100" />
     </GuidSymbol>
 
