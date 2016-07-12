@@ -59,8 +59,7 @@ namespace FormatAllFiles
             var option = ((FormatAllFilesPackage)Package).GetGeneralOption();
             var fileFilter = option.CreateFileFilter();
 
-            var targetItems = GetSelectedProjects(dte.ToolWindows.SolutionExplorer)
-                .SelectMany(x => GetProjectItems(x, option.CreateHierarchyFilter()))
+            var targetItems = GetSelectedProjectItems(dte.ToolWindows.SolutionExplorer, option.CreateHierarchyFilter())
                 .Where(item => item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string && fileFilter(item.Name))
                 .ToArray();
 
@@ -148,12 +147,37 @@ namespace FormatAllFiles
         /// <summary>
         /// プロジェクトに含まれるアイテムの一覧を取得します。
         /// </summary>
-        /// <remarks>
-        /// フォルダもプロジェクトとみなされます。
-        /// </remarks>
         private IEnumerable<ProjectItem> GetProjectItems(Project project, Func<string, bool> filter)
         {
-            return project.ProjectItems
+            return GetProjectItems(project.ProjectItems, filter);
+        }
+
+        /// <summary>
+        /// 指定のアイテムに含まれるアイテムの一覧を取得します。
+        /// </summary>
+        private IEnumerable<ProjectItem> GetProjectItems(ProjectItem item, Func<string, bool> filter)
+        {
+            var innerItems = GetProjectItems(item.ProjectItems, filter);
+            if (item.Kind == VSConstants.ItemTypeGuid.PhysicalFile_string)
+            {
+                return new[] { item }.Concat(innerItems);
+            }
+            else
+            {
+                return innerItems;
+            }
+        }
+
+        /// <summary>
+        /// 指定のアイテム一覧に含まれる全てのアイテムを取得します。
+        /// </summary>
+        /// <remarks>
+        /// フォルダ、ファイルを指定できます。
+        /// ファイルの中にネストされているアイテムも取得します。
+        /// </remarks>
+        private IEnumerable<ProjectItem> GetProjectItems(ProjectItems items, Func<string, bool> filter)
+        {
+            return items
                 .OfType<ProjectItem>()
                 .Recursive(x =>
                 {
@@ -180,13 +204,12 @@ namespace FormatAllFiles
         }
 
         /// <summary>
-        /// ソリューションエクスプローラーで選択中のプロジェクトを取得します。
+        /// ソリューションエクスプローラーで選択中のアイテムの一覧を取得します。
         /// </summary>
         /// <remarks>
-        /// ソリューションを選択中の場合は、その直下のプロジェクトを取得します。
-        /// また、フォルダもプロジェクトとみなされます。
+        /// ソリューション、プロジェクト、またはフォルダを選択中の場合は、その直下のアイテムを取得します。
         /// </remarks>
-        private IEnumerable<Project> GetSelectedProjects(UIHierarchy solutionExplorer)
+        private IEnumerable<ProjectItem> GetSelectedProjectItems(UIHierarchy solutionExplorer, Func<string, bool> filter)
         {
             // MEMO : VS2015 では UIHierarchyItem[] だが、VS2010 では object[] になる
             var selectedItems = (object[])solutionExplorer.SelectedItems;
@@ -197,17 +220,24 @@ namespace FormatAllFiles
                 var solution = selectedObject as Solution;
                 if (solution != null)
                 {
-                    return solution.Projects.OfType<Project>();
+                    return solution.Projects.OfType<Project>()
+                        .SelectMany(x => GetProjectItems(x, filter));
                 }
 
                 var project = selectedObject as Project;
                 if (project != null)
                 {
-                    return new[] { project };
+                    return GetProjectItems(project, filter);
+                }
+
+                var item = selectedObject as ProjectItem;
+                if (item != null)
+                {
+                    return GetProjectItems(item, filter);
                 }
             }
 
-            return Enumerable.Empty<Project>();
+            return Enumerable.Empty<ProjectItem>();
         }
     }
 }
