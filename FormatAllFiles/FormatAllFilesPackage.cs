@@ -9,7 +9,7 @@ namespace FormatAllFiles
     /// 拡張機能として配置されるパッケージです。
     /// </summary>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "1.1", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(GeneralOptionPage), PackageName, "General", 100, 101, true)]
