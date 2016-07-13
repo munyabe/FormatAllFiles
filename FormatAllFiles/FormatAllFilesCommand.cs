@@ -206,35 +206,48 @@ namespace FormatAllFiles
         /// <summary>
         /// ソリューションエクスプローラーで選択中のアイテムの一覧を取得します。
         /// </summary>
-        /// <remarks>
-        /// ソリューション、プロジェクト、またはフォルダを選択中の場合は、その直下のアイテムを取得します。
-        /// </remarks>
         private IEnumerable<ProjectItem> GetSelectedProjectItems(UIHierarchy solutionExplorer, Func<string, bool> filter)
         {
             // MEMO : VS2015 では UIHierarchyItem[] だが、VS2010 では object[] になる
-            var selectedItems = (object[])solutionExplorer.SelectedItems;
-            if (selectedItems != null && selectedItems.Length == 1)
+            var selectedItems = solutionExplorer.SelectedItems as object[];
+            if (selectedItems != null)
             {
-                var selectedObject = ((UIHierarchyItem)selectedItems[0]).Object;
+                return selectedItems.OfType<UIHierarchyItem>()
+                    .SelectMany(x => GetSelectedProjectItems(x, filter));
+            }
+            else
+            {
+                return Enumerable.Empty<ProjectItem>();
+            }
+        }
 
-                var solution = selectedObject as Solution;
-                if (solution != null)
-                {
-                    return solution.Projects.OfType<Project>()
-                        .SelectMany(x => GetProjectItems(x, filter));
-                }
+        /// <summary>
+        /// ソリューションエクスプローラーで選択中のアイテムの一覧を取得します。
+        /// </summary>
+        /// <remarks>
+        /// ソリューション、プロジェクト、またはフォルダを選択中の場合は、その直下のアイテムを取得します。
+        /// </remarks>
+        private IEnumerable<ProjectItem> GetSelectedProjectItems(UIHierarchyItem hierarchyItem, Func<string, bool> filter)
+        {
+            var selectedObject = hierarchyItem.Object;
 
-                var project = selectedObject as Project;
-                if (project != null)
-                {
-                    return GetProjectItems(project, filter);
-                }
+            var solution = selectedObject as Solution;
+            if (solution != null)
+            {
+                return solution.Projects.OfType<Project>()
+                    .SelectMany(x => GetProjectItems(x, filter));
+            }
 
-                var item = selectedObject as ProjectItem;
-                if (item != null)
-                {
-                    return GetProjectItems(item, filter);
-                }
+            var project = selectedObject as Project;
+            if (project != null)
+            {
+                return GetProjectItems(project, filter);
+            }
+
+            var item = selectedObject as ProjectItem;
+            if (item != null)
+            {
+                return GetProjectItems(item, filter);
             }
 
             return Enumerable.Empty<ProjectItem>();

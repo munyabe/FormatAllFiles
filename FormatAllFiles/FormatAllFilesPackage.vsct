@@ -48,6 +48,9 @@
       <Group guid="guidFormatAllFilesPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
       </Group>
+      <Group guid="guidFormatAllFilesPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_MULTIPROJ"/>
+      </Group>
     </Groups>
 
     <!--Buttons section. -->
