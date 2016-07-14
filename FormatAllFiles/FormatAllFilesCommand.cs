@@ -86,7 +86,7 @@ namespace FormatAllFiles
 
             _outputWindow.WriteLine($"{DateTime.Now.ToString("T")} Finished. ({itemCount - errorCount} success. {errorCount} failure.)");
             statusBar.Progress(false);
-            statusBar.Text = "Format All Files is finished.";
+            statusBar.Text = $"Format All Files is finished. ({itemCount} files)";
         }
 
         /// <summary>
