@@ -4,7 +4,7 @@
     <Identity Id="16a2b8be-df6a-49b4-87c3-d5aeb9478822" Version="1.1" Language="en-US" Publisher="munyabe" />
     <DisplayName>Format All Files</DisplayName>
     <Description>This is a visual studio extension to format all files and execute other command in a solution or project.</Description>
-    <MoreInfo>https://visualstudiogallery.msdn.microsoft.com/68076712-aea1-4317-ba71-ecf987da415f</MoreInfo>
+    <MoreInfo>https://marketplace.visualstudio.com/items?itemName=munyabe.FormatAllFiles</MoreInfo>
     <License>LICENSE.txt</License>
     <Icon>Resources\Package.ico</Icon>
     <PreviewImage>Resources\Preview.png</PreviewImage>

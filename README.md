@@ -4,4 +4,4 @@
 This is a visual studio extension to format all files and execute other command in a solution or project.
 
 ## Getting Started
-See [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/68076712-aea1-4317-ba71-ecf987da415f) for additional info on how to use this extension.
+See [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=munyabe.FormatAllFiles) for additional info on how to use this extension.
